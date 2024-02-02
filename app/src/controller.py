@@ -35,10 +35,10 @@ class CSVReadController():
                 if line == TypeEnum.NET.value or line == TypeEnum.JOB.value:
                     read_flag[line] = True
                     continue
-                elif line == read_flag[TypeEnum.NET.value]:
+                elif read_flag[TypeEnum.NET.value]:
                     return_dict[TypeEnum.NET.value] = line
                     read_flag[TypeEnum.NET.value] = False
-                elif line == read_flag[TypeEnum.JOB.value]:
+                elif read_flag[TypeEnum.JOB.value]:
                     return_dict[TypeEnum.JOB.value] = line
                     read_flag[TypeEnum.JOB.value] = False
                 else:
