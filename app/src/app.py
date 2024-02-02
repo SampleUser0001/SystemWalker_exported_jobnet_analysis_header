@@ -31,7 +31,7 @@ def exec():
     NET_list = []
     JOB_list = []
     for csv in glob.glob(csv_home + '/**/*.csv', recursive=True):
-        tmp_dict = CsvReadController.read(csv)
+        tmp_dict = CSVReadController.read(csv)
         NET_list.append(tmp_dict[TypeEnum.NET.value])
         JOB_list.append(tmp_dict[TypeEnum.JOB.value])
     
