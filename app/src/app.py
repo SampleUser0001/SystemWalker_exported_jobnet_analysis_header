@@ -2,12 +2,12 @@
 from logging import getLogger, config, DEBUG
 import os
 
-# import sys
+import sys
+import glob
 from logutil import LogUtil
-from importenv import ImportEnvKeyEnum
+from enums import TypeEnum
 
-from util.sample import Util
-from controller import SampleController
+from controller import CSVReadController
 
 PYTHON_APP_HOME = os.getenv('PYTHON_APP_HOME')
 LOG_CONFIG_FILE = ['config', 'log_config.json']
@@ -18,24 +18,36 @@ config.dictConfig(log_conf)
 logger.setLevel(DEBUG)
 logger.propagate = False
 
-def sample_func():
-    logger.info('hoge')
-    logger.debug('hoge')
-
-if __name__ == '__main__':
+def exec():
     # 起動引数の取得
     # args = sys.argv
     # args[0]はpythonのファイル名。
     # 実際の引数はargs[1]から。
+
+    args = sys.argv
+    csv_home = args[1]
+    export_home = args[2]
+
+    logger.info(f'csv_home: {csv_home}')
+    logger.info(f'export_home: {export_home}')
+
+    NET_list = []
+    JOB_list = []
+    for csv in glob.glob(csv_home + '/**/*.csv', recursive=True):
+        tmp_dict = CSVReadController.read(csv)
+        NET_list.append(tmp_dict[TypeEnum.NET.value])
+        JOB_list.append(tmp_dict[TypeEnum.JOB.value])
+        logger.debug(f'csv: {csv}, header: {tmp_dict[TypeEnum.NET.value]}, JOB: {tmp_dict}')
     
-    logger.info('This is logger message!!')
-    logger.debug('This is logger message!!')
+    export(export_home + '/NET.txt', NET_list)
+    export(export_home + '/JOB.txt', JOB_list)
 
-    # .envの取得
-    logger.info(f'ImportEnvKeyEnum.SAMPLE.value : {ImportEnvKeyEnum.SAMPLE.value}')
-
-    sample_func()
-
-    Util.print()
+def export(export_path: str, data: list):
+    with open(export_path, 'w') as f:
+        for d in set(data):
+            f.write(d + '\n')
     
-    SampleController().print_log()
+if __name__ == '__main__':
+    logger.info('Start')
+    exec()
+    logger.info('Finish')
