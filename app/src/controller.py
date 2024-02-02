@@ -43,4 +43,4 @@ class CSVReadController():
                     read_flag[TypeEnum.JOB.value] = False
                 else:
                     pass
-                    
+        return return_dict

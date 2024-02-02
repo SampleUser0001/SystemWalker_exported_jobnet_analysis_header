@@ -28,12 +28,16 @@ def exec():
     csv_home = args[1]
     export_home = args[2]
 
+    logger.info(f'csv_home: {csv_home}')
+    logger.info(f'export_home: {export_home}')
+
     NET_list = []
     JOB_list = []
     for csv in glob.glob(csv_home + '/**/*.csv', recursive=True):
         tmp_dict = CSVReadController.read(csv)
         NET_list.append(tmp_dict[TypeEnum.NET.value])
         JOB_list.append(tmp_dict[TypeEnum.JOB.value])
+        logger.debug(f'csv: {csv}, header: {tmp_dict[TypeEnum.NET.value]}, JOB: {tmp_dict}')
     
     export(export_home + '/NET.txt', NET_list)
     export(export_home + '/JOB.txt', JOB_list)
